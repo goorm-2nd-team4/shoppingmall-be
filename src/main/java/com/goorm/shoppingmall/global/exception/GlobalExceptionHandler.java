@@ -1,4 +1,4 @@
-package com.gmart.global.exception;
+package com.goorm.shoppingmall.global.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

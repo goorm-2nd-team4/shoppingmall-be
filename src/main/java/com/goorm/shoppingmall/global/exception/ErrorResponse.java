@@ -1,4 +1,4 @@
-package com.gmart.global.exception;
+package com.goorm.shoppingmall.global.exception;
 
 import lombok.Builder;
 import lombok.Getter;
