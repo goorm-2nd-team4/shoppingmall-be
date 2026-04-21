@@ -20,10 +20,10 @@ public class Order {
     private Long id;
 
     @Column(name = "order_number", nullable = false, unique = true, length = 50)
-    private String orderNumber;  // ex) ORD-20250419-000001
+    private String orderNumber;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @Column(name = "user_email", nullable = false, length = 100)
+    private String userEmail;
 
     @Column(name = "total_price", nullable = false)
     private int totalPrice;
@@ -46,10 +46,10 @@ public class Order {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // 생성 팩토리 메서드
-    public static Order create(Long userId, String orderNumber, List<OrderItem> items) {
+    public static Order create(String userEmail, String orderNumber,
+                               List<OrderItem> items) {
         Order order = new Order();
-        order.userId = userId;
+        order.userEmail = userEmail;
         order.orderNumber = orderNumber;
         order.orderStatus = OrderStatus.PENDING;
 
@@ -69,7 +69,6 @@ public class Order {
         return order;
     }
 
-    // 비즈니스 메서드 - 주문 취소
     public void cancel() {
         if (this.orderStatus == OrderStatus.SHIPPING ||
                 this.orderStatus == OrderStatus.DELIVERED) {
@@ -78,7 +77,6 @@ public class Order {
         this.orderStatus = OrderStatus.CANCELLED;
     }
 
-    // 비즈니스 메서드 - 상태 변경 (관리자용)
     public void updateStatus(OrderStatus status) {
         this.orderStatus = status;
     }

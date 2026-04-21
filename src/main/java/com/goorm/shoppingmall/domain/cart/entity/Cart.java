@@ -19,8 +19,8 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false, unique = true)
-    private Long userId;  // users.id FK (팀원 User 엔티티와 직접 연관관계 X → ID만 보관)
+    @Column(name = "user_email", nullable = false, unique = true, length = 100)
+    private String userEmail;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> cartItems = new ArrayList<>();
@@ -33,14 +33,12 @@ public class Cart {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // 생성 팩토리 메서드
-    public static Cart create(Long userId) {
+    public static Cart create(String userEmail) {
         Cart cart = new Cart();
-        cart.userId = userId;
+        cart.userEmail = userEmail;
         return cart;
     }
 
-    // 비즈니스 메서드
     public void addItem(CartItem item) {
         cartItems.add(item);
     }

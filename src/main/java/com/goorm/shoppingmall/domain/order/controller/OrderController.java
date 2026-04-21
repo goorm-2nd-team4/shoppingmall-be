@@ -22,53 +22,42 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    // 주문 생성
     @PostMapping
     public ResponseEntity<ApiResponse<OrderResponse>> createOrder(
             @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody OrderCreateRequest request) {
-
-        Long userId = extractUserId(userDetails);
-        OrderResponse response = orderService.createOrder(userId, request);
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(ApiResponse.ok("주문이 완료되었습니다.", response));
+        String userEmail = extractUserEmail(userDetails);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.ok("주문이 완료되었습니다.",
+                        orderService.createOrder(userEmail, request)));
     }
 
-    // 내 주문 목록
     @GetMapping
     public ResponseEntity<ApiResponse<List<OrderListResponse>>> getMyOrders(
             @AuthenticationPrincipal UserDetails userDetails) {
-
-        Long userId = extractUserId(userDetails);
-        return ResponseEntity.ok(ApiResponse.ok(orderService.getMyOrders(userId)));
+        String userEmail = extractUserEmail(userDetails);
+        return ResponseEntity.ok(ApiResponse.ok(orderService.getMyOrders(userEmail)));
     }
 
-    // 주문 상세
     @GetMapping("/{orderId}")
     public ResponseEntity<ApiResponse<OrderResponse>> getOrderDetail(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Long orderId) {
-
-        Long userId = extractUserId(userDetails);
+        String userEmail = extractUserEmail(userDetails);
         return ResponseEntity.ok(ApiResponse.ok(
-                orderService.getOrderDetail(userId, orderId)));
+                orderService.getOrderDetail(userEmail, orderId)));
     }
 
-    // 주문 취소
     @PatchMapping("/{orderId}/cancel")
     public ResponseEntity<ApiResponse<OrderResponse>> cancelOrder(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Long orderId) {
-
-        Long userId = extractUserId(userDetails);
+        String userEmail = extractUserEmail(userDetails);
         return ResponseEntity.ok(ApiResponse.ok("주문이 취소되었습니다.",
-                orderService.cancelOrder(userId, orderId)));
+                orderService.cancelOrder(userEmail, orderId)));
     }
 
-    // Cart Controller와 동일 - 팀원 Security 구현에 맞춰 수정
-    private Long extractUserId(UserDetails userDetails) {
-        return Long.parseLong(userDetails.getUsername());
+    private String extractUserEmail(UserDetails userDetails) {
+        return userDetails.getUsername();
     }
 }

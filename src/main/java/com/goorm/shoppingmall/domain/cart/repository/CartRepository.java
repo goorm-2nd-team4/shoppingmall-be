@@ -9,9 +9,8 @@ import java.util.Optional;
 
 public interface CartRepository extends JpaRepository<Cart, Long> {
 
-    // 유저 ID로 장바구니 조회 (cartItems 함께 fetch)
-    @Query("SELECT c FROM Cart c LEFT JOIN FETCH c.cartItems WHERE c.userId = :userId")
-    Optional<Cart> findByUserIdWithItems(@Param("userId") Long userId);
+    @Query("SELECT c FROM Cart c LEFT JOIN FETCH c.cartItems WHERE c.userEmail = :userEmail")
+    Optional<Cart> findByUserEmailWithItems(@Param("userEmail") String userEmail);
 
-    boolean existsByUserId(Long userId);
+    boolean existsByUserEmail(String userEmail);
 }
