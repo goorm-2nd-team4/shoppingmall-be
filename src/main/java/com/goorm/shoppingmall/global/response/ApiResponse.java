@@ -23,6 +23,14 @@ public class ApiResponse<T> {
         return new ApiResponse<>(true, message, data);
     }
 
+    public static <T> ApiResponse<T> of(String message, T data) {
+        return ok(message, data);
+    }
+
+    public static ApiResponse<Void> message(String message) {
+        return new ApiResponse<>(true, message, null);
+    }
+
     public static <T> ApiResponse<T> fail(String message) {
         return new ApiResponse<>(false, message, null);
     }
