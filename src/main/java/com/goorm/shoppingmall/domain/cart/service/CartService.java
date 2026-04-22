@@ -20,7 +20,7 @@ public class CartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public CartResponse getCart(String userEmail) {
         Cart cart = getOrCreateCart(userEmail);
         log.debug("[CartService] 장바구니 조회 - userEmail: {}, itemCount: {}",
