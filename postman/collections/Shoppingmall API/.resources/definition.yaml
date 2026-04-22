@@ -1,0 +1,7 @@
+$kind: collection
+name: Shoppingmall API
+variables:
+  - key: baseUrl
+    value: 'http://localhost:8080'
+  - key: token
+    value: ''
