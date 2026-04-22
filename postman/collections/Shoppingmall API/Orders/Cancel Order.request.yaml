@@ -1,0 +1,13 @@
+$kind: http-request
+name: Cancel Order
+method: PATCH
+url: '{{baseUrl}}/api/orders/{{orderId}}/cancel'
+order: 4000
+pathVariables:
+  - key: orderId
+    value: '1'
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{token}}'
