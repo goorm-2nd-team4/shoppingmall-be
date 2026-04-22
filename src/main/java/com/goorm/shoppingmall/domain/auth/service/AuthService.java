@@ -1,15 +1,15 @@
-package com.goorm.shoppingmall.auth.service;
+package com.goorm.shoppingmall.domain.auth.service;
 
-import com.goorm.shoppingmall.auth.dto.LoginRequest;
-import com.goorm.shoppingmall.auth.dto.LoginResult;
-import com.goorm.shoppingmall.auth.dto.RegisterRequest;
-import com.goorm.shoppingmall.auth.dto.RegisterResult;
+import com.goorm.shoppingmall.domain.auth.dto.LoginRequest;
+import com.goorm.shoppingmall.domain.auth.dto.LoginResult;
+import com.goorm.shoppingmall.domain.auth.dto.RegisterRequest;
+import com.goorm.shoppingmall.domain.auth.dto.RegisterResult;
 import com.goorm.shoppingmall.global.error.DuplicateResourceException;
 import com.goorm.shoppingmall.global.error.InvalidCredentialsException;
 import com.goorm.shoppingmall.global.error.InvalidRequestException;
-import com.goorm.shoppingmall.user.domain.User;
-import com.goorm.shoppingmall.user.repository.UserRepository;
-import java.util.UUID;
+import com.goorm.shoppingmall.global.jwt.JwtProvider;
+import com.goorm.shoppingmall.domain.user.domain.User;
+import com.goorm.shoppingmall.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +21,7 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
 
     @Transactional
     public RegisterResult register(RegisterRequest request) {
@@ -50,6 +51,7 @@ public class AuthService {
             throw new InvalidCredentialsException("이메일 또는 비밀번호가 올바르지 않습니다.");
         }
 
-        return LoginResult.from(user, UUID.randomUUID().toString());
+        String token = jwtProvider.generateToken(user.getEmail(), user.getRole().name());
+        return LoginResult.from(user, token);
     }
 }

@@ -1,4 +1,4 @@
-package com.goorm.shoppingmall.user.domain;
+package com.goorm.shoppingmall.domain.user.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -51,5 +51,24 @@ public class User {
                 .name(name)
                 .role(UserRole.USER)
                 .build();
+    }
+
+    public static User createAdmin(String email, String encodedPassword, String name) {
+        return User.builder()
+                .email(email)
+                .password(encodedPassword)
+                .name(name)
+                .role(UserRole.ADMIN)
+                .build();
+    }
+
+    public void updateProfile(String encodedPassword, String name, UserRole role) {
+        this.password = encodedPassword;
+        this.name = name;
+        this.role = role;
+    }
+
+    public void updateRole(UserRole role) {
+        this.role = role;
     }
 }

@@ -1,7 +1,7 @@
-package com.goorm.shoppingmall.auth.dto;
+package com.goorm.shoppingmall.domain.auth.dto;
 
-import com.goorm.shoppingmall.user.domain.User;
-import com.goorm.shoppingmall.user.domain.UserRole;
+import com.goorm.shoppingmall.domain.user.domain.User;
+import com.goorm.shoppingmall.domain.user.domain.UserRole;
 
 public record RegisterResult(
         Long id,

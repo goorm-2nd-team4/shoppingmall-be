@@ -1,10 +1,10 @@
-package com.goorm.shoppingmall.auth.controller;
+package com.goorm.shoppingmall.domain.auth.controller;
 
-import com.goorm.shoppingmall.auth.dto.LoginRequest;
-import com.goorm.shoppingmall.auth.dto.LoginResult;
-import com.goorm.shoppingmall.auth.dto.RegisterRequest;
-import com.goorm.shoppingmall.auth.dto.RegisterResult;
-import com.goorm.shoppingmall.auth.service.AuthService;
+import com.goorm.shoppingmall.domain.auth.dto.LoginRequest;
+import com.goorm.shoppingmall.domain.auth.dto.LoginResult;
+import com.goorm.shoppingmall.domain.auth.dto.RegisterRequest;
+import com.goorm.shoppingmall.domain.auth.dto.RegisterResult;
+import com.goorm.shoppingmall.domain.auth.service.AuthService;
 import com.goorm.shoppingmall.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

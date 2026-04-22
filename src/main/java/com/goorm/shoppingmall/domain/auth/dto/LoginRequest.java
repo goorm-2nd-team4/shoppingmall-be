@@ -1,4 +1,4 @@
-package com.goorm.shoppingmall.auth.dto;
+package com.goorm.shoppingmall.domain.auth.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
