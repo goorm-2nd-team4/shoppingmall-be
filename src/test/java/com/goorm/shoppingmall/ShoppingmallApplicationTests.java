@@ -7,8 +7,6 @@ import org.springframework.test.context.TestPropertySource;
 
 @ActiveProfiles("test")
 @SpringBootTest
-@ActiveProfiles("test")
-
 class ShoppingmallApplicationTests {
 
 	@Test

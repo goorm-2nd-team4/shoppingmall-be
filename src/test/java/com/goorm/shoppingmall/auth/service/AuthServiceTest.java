@@ -3,14 +3,16 @@ package com.goorm.shoppingmall.auth.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.goorm.shoppingmall.auth.dto.LoginRequest;
-import com.goorm.shoppingmall.auth.dto.LoginResult;
-import com.goorm.shoppingmall.auth.dto.RegisterRequest;
-import com.goorm.shoppingmall.auth.dto.RegisterResult;
+import com.goorm.shoppingmall.domain.auth.dto.LoginRequest;
+import com.goorm.shoppingmall.domain.auth.dto.LoginResult;
+import com.goorm.shoppingmall.domain.auth.dto.RegisterRequest;
+import com.goorm.shoppingmall.domain.auth.dto.RegisterResult;
+import com.goorm.shoppingmall.domain.auth.service.AuthService;
 import com.goorm.shoppingmall.global.error.DuplicateResourceException;
 import com.goorm.shoppingmall.global.error.InvalidCredentialsException;
 import com.goorm.shoppingmall.global.error.InvalidRequestException;
-import com.goorm.shoppingmall.user.repository.UserRepository;
+import com.goorm.shoppingmall.global.jwt.JwtProvider;
+import com.goorm.shoppingmall.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,6 +31,9 @@ class AuthServiceTest {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtProvider jwtProvider;
 
     @Test
     void register() {
@@ -51,6 +56,9 @@ class AuthServiceTest {
         assertThat(response.user_email()).isEqualTo("login@example.com");
         assertThat(response.user_name()).isEqualTo("tester");
         assertThat(response.token()).isNotBlank();
+        assertThat(jwtProvider.validateToken(response.token())).isTrue();
+        assertThat(jwtProvider.getEmail(response.token())).isEqualTo("login@example.com");
+        assertThat(jwtProvider.getRole(response.token())).isEqualTo("USER");
     }
 
     @Test
