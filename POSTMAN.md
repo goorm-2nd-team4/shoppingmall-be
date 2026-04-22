@@ -122,6 +122,7 @@ GET {{BASE_URL}}/api/products
       "product_name": "사과",
       "product_price": 1000,
       "product_category": "food",
+      "product_detail": "아삭한 국내산 사과",
       "stock": 50
     },
     {
@@ -129,6 +130,7 @@ GET {{BASE_URL}}/api/products
       "product_name": "바나나",
       "product_price": 500,
       "product_category": "food",
+      "product_detail": "달콤한 바나나",
       "stock": 30
     }
   ]
@@ -154,6 +156,7 @@ GET {{BASE_URL}}/api/products/1
     "product_name": "사과",
     "product_price": 1000,
     "product_category": "food",
+    "product_detail": "아삭한 국내산 사과",
     "stock": 50
   }
 }
@@ -176,6 +179,7 @@ Content-Type: application/json
   "product_name": "상품명",
   "product_price": 10000,
   "product_category": "food",
+  "product_detail": "상품 상세 설명",
   "stock": 100
 }
 ```
@@ -191,6 +195,7 @@ Content-Type: application/json
     "product_name": "상품명",
     "product_price": 10000,
     "product_category": "food",
+    "product_detail": "상품 상세 설명",
     "stock": 100
   }
 }
@@ -219,6 +224,7 @@ Content-Type: application/json
 
 ```json
 {
+  "product_detail": "수정된 상품 상세 설명",
   "product_price": 12000,
   "stock": 80
 }
@@ -235,12 +241,13 @@ Content-Type: application/json
     "product_name": "상품명",
     "product_price": 12000,
     "product_category": "food",
+    "product_detail": "수정된 상품 상세 설명",
     "stock": 80
   }
 }
 ```
 
-`product_name`, `product_category`, `product_price`, `stock` 중 필요한 필드만 보내도 됩니다.
+`product_name`, `product_category`, `product_detail`, `product_price`, `stock` 중 필요한 필드만 보내도 됩니다.
 
 ---
 

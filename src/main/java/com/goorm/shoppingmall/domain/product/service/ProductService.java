@@ -35,6 +35,7 @@ public class ProductService {
                 request.product_name(),
                 request.product_price(),
                 request.product_category(),
+                request.product_detail(),
                 request.stock()
         );
 
@@ -48,6 +49,7 @@ public class ProductService {
                 request.product_name(),
                 request.product_price(),
                 request.product_category(),
+                request.product_detail(),
                 request.stock()
         );
 

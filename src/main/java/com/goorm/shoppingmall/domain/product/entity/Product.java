@@ -30,27 +30,34 @@ public class Product {
     @Column(name = "product_category", nullable = false, length = 50)
     private String productCategory;
 
+    @Column(name = "product_detail", nullable = false, columnDefinition = "TEXT")
+    private String productDetail;
+
     @Column(nullable = false)
     private int stock;
 
     @Builder
-    private Product(String productName, int productPrice, String productCategory, int stock) {
+    private Product(String productName, int productPrice, String productCategory, String productDetail, int stock) {
         this.productName = productName;
         this.productPrice = productPrice;
         this.productCategory = productCategory;
+        this.productDetail = productDetail;
         this.stock = stock;
     }
 
-    public static Product create(String productName, int productPrice, String productCategory, int stock) {
+    public static Product create(String productName, int productPrice, String productCategory, String productDetail,
+                                 int stock) {
         return Product.builder()
                 .productName(productName)
                 .productPrice(productPrice)
                 .productCategory(productCategory)
+                .productDetail(productDetail)
                 .stock(stock)
                 .build();
     }
 
-    public void update(String productName, Integer productPrice, String productCategory, Integer stock) {
+    public void update(String productName, Integer productPrice, String productCategory, String productDetail,
+                       Integer stock) {
         if (productName != null) {
             this.productName = productName;
         }
@@ -59,6 +66,9 @@ public class Product {
         }
         if (productCategory != null) {
             this.productCategory = productCategory;
+        }
+        if (productDetail != null) {
+            this.productDetail = productDetail;
         }
         if (stock != null) {
             this.stock = stock;

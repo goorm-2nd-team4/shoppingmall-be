@@ -13,6 +13,9 @@ public record ProductUpdateRequest(
         @Size(min = 1, max = 50, message = "상품 카테고리는 1자 이상 50자 이하여야 합니다.")
         String product_category,
 
+        @Size(min = 1, message = "상품 상세설명은 1자 이상이어야 합니다.")
+        String product_detail,
+
         @Min(value = 0, message = "재고는 0개 이상이어야 합니다.")
         Integer stock
 ) {

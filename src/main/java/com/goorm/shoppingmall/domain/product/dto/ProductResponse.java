@@ -7,6 +7,7 @@ public record ProductResponse(
         String product_name,
         int product_price,
         String product_category,
+        String product_detail,
         int stock
 ) {
     public static ProductResponse from(Product product) {
@@ -15,6 +16,7 @@ public record ProductResponse(
                 product.getProductName(),
                 product.getProductPrice(),
                 product.getProductCategory(),
+                product.getProductDetail(),
                 product.getStock()
         );
     }
