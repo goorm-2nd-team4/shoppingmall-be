@@ -21,5 +21,6 @@ body:
       "product_name": "Updated Product",
       "product_price": 9000,
       "product_category": "Electronics",
+      "product_detail": "Updated product detail",
       "stock": 50
     }

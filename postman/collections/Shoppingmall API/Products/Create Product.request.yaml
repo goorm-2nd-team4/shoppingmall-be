@@ -18,5 +18,6 @@ body:
       "product_name": "Sample Product",
       "product_price": 10000,
       "product_category": "Electronics",
+      "product_detail": "Sample product detail",
       "stock": 100
     }
