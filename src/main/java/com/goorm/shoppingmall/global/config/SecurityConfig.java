@@ -56,7 +56,10 @@ public class SecurityConfig {
                         // ── 인증 없이 허용 ──────────────────────
                         .requestMatchers(
                                 "/api/auth/login",
-                                "/api/auth/register"
+                                "/api/auth/register",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**"
                         ).permitAll()
 
                         // 상품 목록 / 상세는 비로그인도 조회 가능
