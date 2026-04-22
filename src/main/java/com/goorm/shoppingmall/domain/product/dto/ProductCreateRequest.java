@@ -18,6 +18,9 @@ public record ProductCreateRequest(
         @Size(max = 50, message = "상품 카테고리는 50자 이하여야 합니다.")
         String product_category,
 
+        @NotBlank(message = "상품 상세설명은 필수입니다.")
+        String product_detail,
+
         @NotNull(message = "재고는 필수입니다.")
         @Min(value = 0, message = "재고는 0개 이상이어야 합니다.")
         Integer stock

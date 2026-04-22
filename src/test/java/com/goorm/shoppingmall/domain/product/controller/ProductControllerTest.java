@@ -41,19 +41,20 @@ class ProductControllerTest {
     void setUp() {
         productRepository.deleteAll();
         productId = productRepository.save(
-                Product.create("사과", 1000, "food", 50)
+                Product.create("사과", 1000, "food", "아삭한 국내산 사과", 50)
         ).getId();
     }
 
     @Test
     void allowAnyoneToGetProducts() throws Exception {
-        productRepository.save(Product.create("바나나", 500, "food", 30));
+        productRepository.save(Product.create("바나나", 500, "food", "달콤한 바나나", 30));
 
         mockMvc.perform(get("/api/products"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success", is(true)))
                 .andExpect(jsonPath("$.message", is("success")))
                 .andExpect(jsonPath("$.data[0].product_name", is("사과")))
+                .andExpect(jsonPath("$.data[0].product_detail", is("아삭한 국내산 사과")))
                 .andExpect(jsonPath("$.data[1].product_name", is("바나나")));
     }
 
@@ -65,6 +66,7 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$.data.product_name", is("사과")))
                 .andExpect(jsonPath("$.data.product_price", is(1000)))
                 .andExpect(jsonPath("$.data.product_category", is("food")))
+                .andExpect(jsonPath("$.data.product_detail", is("아삭한 국내산 사과")))
                 .andExpect(jsonPath("$.data.stock", is(50)));
     }
 
@@ -77,6 +79,7 @@ class ProductControllerTest {
                                   "product_name": "상품명",
                                   "product_price": 10000,
                                   "product_category": "food",
+                                  "product_detail": "상품 상세 설명",
                                   "stock": 100
                                 }
                                 """))
@@ -94,6 +97,7 @@ class ProductControllerTest {
                                   "product_name": "상품명",
                                   "product_price": 10000,
                                   "product_category": "food",
+                                  "product_detail": "상품 상세 설명",
                                   "stock": 100
                                 }
                                 """))
@@ -111,6 +115,7 @@ class ProductControllerTest {
                                   "product_name": "상품명",
                                   "product_price": 10000,
                                   "product_category": "food",
+                                  "product_detail": "상품 상세 설명",
                                   "stock": 100
                                 }
                                 """))
@@ -118,6 +123,7 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$.message", is("상품 등록 성공")))
                 .andExpect(jsonPath("$.data.product_name", is("상품명")))
                 .andExpect(jsonPath("$.data.product_price", is(10000)))
+                .andExpect(jsonPath("$.data.product_detail", is("상품 상세 설명")))
                 .andExpect(jsonPath("$.data.stock", is(100)));
     }
 
@@ -128,6 +134,7 @@ class ProductControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
+                                  "product_detail": "새 상품 설명",
                                   "product_price": 12000,
                                   "stock": 80
                                 }
@@ -137,6 +144,7 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$.data.id", is(productId.intValue())))
                 .andExpect(jsonPath("$.data.product_name", is("사과")))
                 .andExpect(jsonPath("$.data.product_price", is(12000)))
+                .andExpect(jsonPath("$.data.product_detail", is("새 상품 설명")))
                 .andExpect(jsonPath("$.data.stock", is(80)));
     }
 
