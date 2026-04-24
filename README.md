@@ -2,7 +2,7 @@
 
 > **패키지**: `com.goorm.shoppingmall`  
 > **DB**: PostgreSQL (`shoppingmall`)  
-> **유저 식별 방식**: `user_email (String)` — B안
+> **유저 식별 방식**: `user_email (String)
 
 ---
 
