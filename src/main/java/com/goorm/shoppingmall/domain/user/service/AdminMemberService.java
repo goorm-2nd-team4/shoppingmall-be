@@ -1,8 +1,8 @@
 package com.goorm.shoppingmall.domain.user.service;
 
 import com.goorm.shoppingmall.global.config.AdminAccountProperties;
-import com.goorm.shoppingmall.global.error.InvalidRequestException;
-import com.goorm.shoppingmall.global.error.ResourceNotFoundException;
+import com.goorm.shoppingmall.global.exception.CustomException;
+import com.goorm.shoppingmall.global.exception.ErrorCode;
 import com.goorm.shoppingmall.domain.user.domain.User;
 import com.goorm.shoppingmall.domain.user.domain.UserRole;
 import com.goorm.shoppingmall.domain.user.dto.MemberListResponse;
@@ -43,7 +43,7 @@ public class AdminMemberService {
         User user = findUser(memberId);
 
         if (isSeedAdmin(user) && role != UserRole.ADMIN) {
-            throw new InvalidRequestException("기본 관리자 계정의 ADMIN 권한은 제거할 수 없습니다.");
+            throw new CustomException(ErrorCode.SEED_ADMIN_ROLE_CHANGE_NOT_ALLOWED);
         }
 
         user.updateRole(role);
@@ -55,7 +55,7 @@ public class AdminMemberService {
         User user = findUser(memberId);
 
         if (isSeedAdmin(user)) {
-            throw new InvalidRequestException("기본 관리자 계정은 삭제할 수 없습니다.");
+            throw new CustomException(ErrorCode.SEED_ADMIN_DELETE_NOT_ALLOWED);
         }
 
         userRepository.delete(user);
@@ -63,7 +63,7 @@ public class AdminMemberService {
 
     private User findUser(Long memberId) {
         return userRepository.findById(memberId)
-                .orElseThrow(() -> new ResourceNotFoundException("회원을 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 
     private boolean isSeedAdmin(User user) {

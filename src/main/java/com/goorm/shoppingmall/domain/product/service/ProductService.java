@@ -5,7 +5,8 @@ import com.goorm.shoppingmall.domain.product.dto.ProductResponse;
 import com.goorm.shoppingmall.domain.product.dto.ProductUpdateRequest;
 import com.goorm.shoppingmall.domain.product.entity.Product;
 import com.goorm.shoppingmall.domain.product.repository.ProductRepository;
-import com.goorm.shoppingmall.global.error.ResourceNotFoundException;
+import com.goorm.shoppingmall.global.exception.CustomException;
+import com.goorm.shoppingmall.global.exception.ErrorCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -63,6 +64,6 @@ public class ProductService {
 
     private Product findProduct(Long productId) {
         return productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("상품을 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 }

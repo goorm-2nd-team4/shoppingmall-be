@@ -69,11 +69,13 @@ public class Order {
         return order;
     }
 
+
+    public boolean isCancellable() {
+        return this.orderStatus != OrderStatus.SHIPPING
+                && this.orderStatus != OrderStatus.DELIVERED;
+    }
+
     public void cancel() {
-        if (this.orderStatus == OrderStatus.SHIPPING ||
-                this.orderStatus == OrderStatus.DELIVERED) {
-            throw new IllegalStateException("배송 중이거나 완료된 주문은 취소할 수 없습니다.");
-        }
         this.orderStatus = OrderStatus.CANCELLED;
     }
 

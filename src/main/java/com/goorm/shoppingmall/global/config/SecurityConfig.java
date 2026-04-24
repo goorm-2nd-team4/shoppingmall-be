@@ -131,7 +131,10 @@ public class SecurityConfig {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write("""
-                {"message":"%s"}
-                """.formatted(message));
+            {"code":"%s","message":"%s","errors":[]}
+            """.formatted(
+                status == HttpStatus.UNAUTHORIZED ? "C004" : "C003",
+                message
+        ));
     }
 }

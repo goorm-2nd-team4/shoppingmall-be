@@ -76,6 +76,11 @@ public class OrderService {
     @Transactional
     public OrderResponse cancelOrder(String userEmail, Long orderId) {
         Order order = getOrderWithValidation(userEmail, orderId);
+
+        if (!order.isCancellable()) {
+            throw new CustomException(ErrorCode.ORDER_CANCEL_NOT_ALLOWED);
+        }
+
         order.cancel();
         log.info("[OrderService] 주문 취소 - userEmail: {}, orderId: {}", userEmail, orderId);
         return OrderResponse.from(order);
