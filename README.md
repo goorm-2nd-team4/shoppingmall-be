@@ -251,28 +251,28 @@ SecurityContextHolder 저장
 ## 🌐 API 명세
 
 ### 인증
-| Method | URL | 설명 | 인증 |
-|--------|-----|------|------|
+| Method | URL | 설명 |
+|--------|-----|------|
 | POST | /api/auth/register | 회원가입 |
 | POST | /api/auth/login | 로그인 |
 | POST | /api/auth/logout | 로그아웃 |
 
 ### 유저
-| Method | URL | 설명 | 인증 |
-|--------|-----|------|------|
+| Method | URL | 설명 |
+|--------|-----|------|
 | GET | /api/users/me | 내 정보 조회 |
 
 ### 상품
-| Method | URL | 설명 | 인증 |
-|--------|-----|------|------|
+| Method | URL | 설명 |
+|--------|-----|------|
 | GET | /api/products | 상품 목록 |
 | POST | /api/products | 상품 등록 | ✅ ADMIN |
 | PATCH | /api/products/{id} | 상품 수정 | ✅ ADMIN |
 | DELETE | /api/products/{id} | 상품 삭제 | ✅ ADMIN |
 
 ### 장바구니
-| Method | URL | 설명 | 인증 |
-|--------|-----|------|------|
+| Method | URL | 설명 |
+|--------|-----|------|
 | GET | /api/cart | 장바구니 조회 |
 | POST | /api/cart/items | 상품 추가 |
 | PUT | /api/cart/items/{id} | 수량 변경 |
@@ -280,16 +280,16 @@ SecurityContextHolder 저장
 | DELETE | /api/cart | 전체 비우기 |
 
 ### 주문
-| Method | URL | 설명 | 인증 |
-|--------|-----|------|------|
+| Method | URL | 설명 |
+|--------|-----|------|
 | POST | /api/orders | 주문 생성 |
 | GET | /api/orders | 내 주문 목록 |
 | GET | /api/orders/{id} | 주문 상세 |
 | PATCH | /api/orders/{id}/cancel | 주문 취소 |
 
 ### 관리자
-| Method | URL | 설명 | 인증 |
-|--------|-----|------|------|
+| Method | URL | 설명 |
+|--------|-----|------|
 | GET | /api/admin/members | 회원 목록 | ✅ ADMIN |
 | GET | /api/admin/members/{id} | 회원 상세 | ✅ ADMIN |
 | PATCH | /api/admin/members/{id}/role | 권한 변경 | ✅ ADMIN |
