@@ -8,9 +8,8 @@ import com.goorm.shoppingmall.domain.auth.dto.LoginResult;
 import com.goorm.shoppingmall.domain.auth.dto.RegisterRequest;
 import com.goorm.shoppingmall.domain.auth.dto.RegisterResult;
 import com.goorm.shoppingmall.domain.auth.service.AuthService;
-import com.goorm.shoppingmall.global.error.DuplicateResourceException;
-import com.goorm.shoppingmall.global.error.InvalidCredentialsException;
-import com.goorm.shoppingmall.global.error.InvalidRequestException;
+import com.goorm.shoppingmall.global.exception.CustomException;
+import com.goorm.shoppingmall.global.exception.ErrorCode;
 import com.goorm.shoppingmall.global.jwt.JwtProvider;
 import com.goorm.shoppingmall.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -67,8 +66,12 @@ class AuthServiceTest {
         authService.register(request);
 
         assertThatThrownBy(() -> authService.register(request))
-                .isInstanceOf(DuplicateResourceException.class)
-                .hasMessage("이미 사용 중인 이메일입니다.");
+                .isInstanceOf(CustomException.class)
+                .satisfies(ex -> {
+                    CustomException customEx = (CustomException) ex;
+                    assertThat(customEx.getErrorCode())
+                            .isEqualTo(ErrorCode.EMAIL_ALREADY_EXISTS);
+                });
     }
 
     @Test
@@ -76,8 +79,12 @@ class AuthServiceTest {
         authService.register(new RegisterRequest("wrongpw@example.com", "password123", "password123", "tester"));
 
         assertThatThrownBy(() -> authService.login(new LoginRequest("wrongpw@example.com", "password456")))
-                .isInstanceOf(InvalidCredentialsException.class)
-                .hasMessage("이메일 또는 비밀번호가 올바르지 않습니다.");
+                .isInstanceOf(CustomException.class)
+                .satisfies(ex -> {
+                    CustomException customEx = (CustomException) ex;
+                    assertThat(customEx.getErrorCode())
+                            .isEqualTo(ErrorCode.AUTH_INVALID_CREDENTIALS);
+                });
     }
 
     @Test
@@ -97,7 +104,11 @@ class AuthServiceTest {
         assertThatThrownBy(() -> authService.register(
                 new RegisterRequest("mismatch@example.com", "password123", "password456", "tester")
         ))
-                .isInstanceOf(InvalidRequestException.class)
-                .hasMessage("비밀번호 확인이 일치하지 않습니다.");
+                .isInstanceOf(CustomException.class)
+                .satisfies(ex -> {
+                    CustomException customEx = (CustomException) ex;
+                    assertThat(customEx.getErrorCode())
+                            .isEqualTo(ErrorCode.PASSWORD_CONFIRM_MISMATCH);
+                });
     }
 }

@@ -4,9 +4,8 @@ import com.goorm.shoppingmall.domain.auth.dto.LoginRequest;
 import com.goorm.shoppingmall.domain.auth.dto.LoginResult;
 import com.goorm.shoppingmall.domain.auth.dto.RegisterRequest;
 import com.goorm.shoppingmall.domain.auth.dto.RegisterResult;
-import com.goorm.shoppingmall.global.error.DuplicateResourceException;
-import com.goorm.shoppingmall.global.error.InvalidCredentialsException;
-import com.goorm.shoppingmall.global.error.InvalidRequestException;
+import com.goorm.shoppingmall.global.exception.CustomException;
+import com.goorm.shoppingmall.global.exception.ErrorCode;
 import com.goorm.shoppingmall.global.jwt.JwtProvider;
 import com.goorm.shoppingmall.domain.user.domain.User;
 import com.goorm.shoppingmall.domain.user.repository.UserRepository;
@@ -26,11 +25,11 @@ public class AuthService {
     @Transactional
     public RegisterResult register(RegisterRequest request) {
         if (!request.isPasswordConfirmed()) {
-            throw new InvalidRequestException("비밀번호 확인이 일치하지 않습니다.");
+            throw new CustomException(ErrorCode.PASSWORD_CONFIRM_MISMATCH);
         }
 
         if (userRepository.existsByEmail(request.user_email())) {
-            throw new DuplicateResourceException("이미 사용 중인 이메일입니다.");
+            throw new CustomException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
 
         User user = User.create(
@@ -45,10 +44,10 @@ public class AuthService {
     @Transactional(readOnly = true)
     public LoginResult login(LoginRequest request) {
         User user = userRepository.findByEmail(request.user_email())
-                .orElseThrow(() -> new InvalidCredentialsException("이메일 또는 비밀번호가 올바르지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.AUTH_INVALID_CREDENTIALS));
 
         if (!passwordEncoder.matches(request.user_password(), user.getPassword())) {
-            throw new InvalidCredentialsException("이메일 또는 비밀번호가 올바르지 않습니다.");
+            throw new CustomException(ErrorCode.AUTH_INVALID_CREDENTIALS);
         }
 
         String token = jwtProvider.generateToken(user.getEmail(), user.getRole().name());

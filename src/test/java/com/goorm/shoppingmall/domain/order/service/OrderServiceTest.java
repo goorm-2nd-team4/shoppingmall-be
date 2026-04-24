@@ -265,9 +265,13 @@ class OrderServiceTest {
 
             // when & then
             assertThatThrownBy(() -> orderService.cancelOrder(USER_EMAIL, ORDER_ID))
-                    .isInstanceOf(IllegalStateException.class)
-                    .hasMessageContaining("배송 중이거나 완료된 주문은 취소할 수 없습니다.");
-        }
+                    .isInstanceOf(CustomException.class)
+                    .satisfies(ex -> {
+                        CustomException customEx = (CustomException) ex;
+                        assertThat(customEx.getErrorCode())
+                                .isEqualTo(ErrorCode.ORDER_CANCEL_NOT_ALLOWED);
+                    });
+        }                                              // ← 여기 } 추가
 
         @Test
         @DisplayName("실패 - DELIVERED 상태 주문 취소 불가")
@@ -282,7 +286,12 @@ class OrderServiceTest {
 
             // when & then
             assertThatThrownBy(() -> orderService.cancelOrder(USER_EMAIL, ORDER_ID))
-                    .isInstanceOf(IllegalStateException.class);
+                    .isInstanceOf(CustomException.class)
+                    .satisfies(ex -> {
+                        CustomException customEx = (CustomException) ex;
+                        assertThat(customEx.getErrorCode())
+                                .isEqualTo(ErrorCode.ORDER_CANCEL_NOT_ALLOWED);
+                    });
         }
     }
 
