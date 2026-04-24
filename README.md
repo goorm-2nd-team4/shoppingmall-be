@@ -10,10 +10,10 @@
 
 | 역할 | 담당 도메인 |
 |------|------------|
-| Backend - 본인 | Cart, Order, Global, JWT/Security |
-| Backend - 팀원 | Auth, User, Product, Admin |
-| Frontend - 팀원 A | 로그인, 회원가입, 메인 페이지 |
-| Frontend - 팀원 B | 장바구니, 결제, 관리자 페이지 |
+| Backend - 전성우 | Cart, Order, Global, JWT/Security |
+| Backend - 박규나 | Auth, User, Product, Admin |
+| Frontend - 이홍섭 | 로그인, 회원가입, 메인 페이지 |
+| Frontend - 김준영 | 장바구니, 결제, 관리자 페이지 |
 
 ---
 
