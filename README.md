@@ -186,7 +186,9 @@ http://localhost:8080/swagger-ui.html
 | cart_id | integer | FK → carts |
 | product_id | integer | FK → products |
 | product_count | integer | NOT NULL |
-| product_price | integer | NOT NULL |
+
+> 장바구니 상품 가격은 `cart_items`에 저장하지 않습니다.  
+> 조회 시점의 `products.product_price`를 기준으로 계산합니다.
 
 ### products
 | 컬럼 | 타입 | 제약 |
@@ -220,6 +222,24 @@ http://localhost:8080/swagger-ui.html
 | product_count | integer | NOT NULL |
 | product_price | integer | NOT NULL (스냅샷) |
 | total_price | integer | NOT NULL |
+
+### 장바구니 가격 정책
+
+- 장바구니는 가격 스냅샷을 저장하지 않습니다.
+- 상품 가격이 바뀌면 장바구니에서도 변경된 현재 가격이 보입니다.
+- 주문은 반대로 스냅샷을 저장합니다. 즉 `order_items.product_price`는 주문 시점 가격입니다.
+
+### 장바구니 가격 정책 변경 시 DB 반영
+
+`spring.jpa.hibernate.ddl-auto=update`는 사용하지 않는 컬럼을 자동으로 삭제하지 않을 수 있습니다.  
+운영 또는 로컬 DB에 기존 `cart_items.product_price` 컬럼이 남아 있다면 아래 SQL을 적용해야 합니다.
+
+```sql
+ALTER TABLE cart_items
+DROP COLUMN IF EXISTS product_price;
+```
+
+전체 파일은 [docs/cart-price-policy-migration.sql](/Users/qnada/Documents/GitHub/goorm/2nd-Team04/shoppingmall-be/docs/cart-price-policy-migration.sql)에 추가했습니다.
 
 ---
 
