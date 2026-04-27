@@ -7,6 +7,8 @@ import com.goorm.shoppingmall.domain.cart.entity.Cart;
 import com.goorm.shoppingmall.domain.cart.entity.CartItem;
 import com.goorm.shoppingmall.domain.cart.repository.CartItemRepository;
 import com.goorm.shoppingmall.domain.cart.repository.CartRepository;
+import com.goorm.shoppingmall.domain.product.entity.Product;
+import com.goorm.shoppingmall.domain.product.repository.ProductRepository;
 import com.goorm.shoppingmall.global.exception.CustomException;
 import com.goorm.shoppingmall.global.exception.ErrorCode;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,6 +39,9 @@ class CartServiceTest {
     @Mock
     private CartItemRepository cartItemRepository;
 
+    @Mock
+    private ProductRepository productRepository;
+
     private final String USER_EMAIL = "test@test.com";
     private final String OTHER_EMAIL = "other@test.com";
     private Cart cart;
@@ -59,6 +64,8 @@ class CartServiceTest {
             // given
             given(cartRepository.findByUserEmailWithItems(USER_EMAIL))
                     .willReturn(Optional.of(cart));
+            given(productRepository.findAllById(anyIterable()))
+                    .willReturn(java.util.List.of());
 
             // when
             CartResponse response = cartService.getCart(USER_EMAIL);
@@ -77,6 +84,8 @@ class CartServiceTest {
                     .willReturn(Optional.empty());
             given(cartRepository.save(any(Cart.class)))
                     .willReturn(cart);
+            given(productRepository.findAllById(anyIterable()))
+                    .willReturn(java.util.List.of());
 
             // when
             CartResponse response = cartService.getCart(USER_EMAIL);
@@ -98,7 +107,7 @@ class CartServiceTest {
 
         @BeforeEach
         void setUp() {
-            request = createAddRequest(10L, 2, 15000);
+            request = createAddRequest(10L, 2);
         }
 
         @Test
@@ -109,8 +118,12 @@ class CartServiceTest {
                     .willReturn(Optional.of(cart));
             given(cartItemRepository.existsByCartIdAndProductId(any(), any()))
                     .willReturn(false);
+            given(productRepository.existsById(10L))
+                    .willReturn(true);
             given(cartItemRepository.save(any(CartItem.class)))
                     .willAnswer(invocation -> invocation.getArgument(0));
+            given(productRepository.findAllById(anyIterable()))
+                    .willReturn(java.util.List.of(createProduct(10L, 15000)));
 
             // when
             CartResponse response = cartService.addItem(USER_EMAIL, request);
@@ -154,7 +167,7 @@ class CartServiceTest {
         void updateItemCount_success() throws Exception {
             // given
             setField(cart, "id", 1L);
-            CartItem item = CartItem.create(cart, 10L, 2, 15000);
+            CartItem item = CartItem.create(cart, 10L, 2);
             setField(item, "id", 1L);
 
             cart.addItem(item);
@@ -165,6 +178,8 @@ class CartServiceTest {
                     .willReturn(Optional.of(cart));
             given(cartItemRepository.findById(1L))
                     .willReturn(Optional.of(item));
+            given(productRepository.findAllById(anyIterable()))
+                    .willReturn(java.util.List.of(createProduct(10L, 15000)));
 
             // when
             CartResponse response = cartService.updateItemCount(USER_EMAIL, 1L, request);
@@ -207,7 +222,7 @@ class CartServiceTest {
         @DisplayName("성공 - 장바구니 전체 비우기")
         void clearCart_success() {
             // given
-            CartItem item = CartItem.create(cart, 10L, 2, 15000);
+            CartItem item = CartItem.create(cart, 10L, 2);
             cart.addItem(item);
 
             given(cartRepository.findByUserEmailWithItems(USER_EMAIL))
@@ -241,19 +256,27 @@ class CartServiceTest {
     // ─────────────────────────────────────────
     // 테스트 픽스처 헬퍼
     // ─────────────────────────────────────────
-    private CartItemAddRequest createAddRequest(Long productId,
-                                                int count, int price) {
+    private CartItemAddRequest createAddRequest(Long productId, int count) {
         // Lombok @NoArgsConstructor + setter 없음 → 리플렉션으로 값 주입
         // 실제로는 @Builder 또는 테스트 전용 생성자 추가 권장
         CartItemAddRequest req = new CartItemAddRequest();
         try {
             setField(req, "productId", productId);
             setField(req, "productCount", count);
-            setField(req, "productPrice", price);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return req;
+    }
+
+    private Product createProduct(Long id, int price) {
+        Product product = Product.create("test", price, "category", "detail", 10);
+        try {
+            setField(product, "id", id);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return product;
     }
 
     private CartItemUpdateRequest createUpdateRequest(int count) {

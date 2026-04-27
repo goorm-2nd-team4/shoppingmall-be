@@ -1,6 +1,7 @@
 package com.goorm.shoppingmall.domain.cart.dto;
 
 import com.goorm.shoppingmall.domain.cart.entity.CartItem;
+import com.goorm.shoppingmall.domain.product.entity.Product;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,13 +15,14 @@ public class CartItemResponse {
     private int productPrice;
     private int subtotal;  // productPrice * productCount
 
-    public static CartItemResponse from(CartItem item) {
+    public static CartItemResponse from(CartItem item, Product product) {
+        int currentPrice = product.getProductPrice();
         return CartItemResponse.builder()
                 .cartItemId(item.getId())
                 .productId(item.getProductId())
                 .productCount(item.getProductCount())
-                .productPrice(item.getProductPrice())
-                .subtotal(item.calculateSubtotal())
+                .productPrice(currentPrice)
+                .subtotal(item.calculateSubtotal(currentPrice))
                 .build();
     }
 }
