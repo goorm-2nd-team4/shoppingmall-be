@@ -86,6 +86,7 @@ public class SecurityConfig {
                         // ── 로그인 필요 (본인 담당 도메인) ────────
                         .requestMatchers("/api/cart/**").authenticated()
                         .requestMatchers("/api/orders/**").authenticated()
+                        .requestMatchers("/api/users/me").authenticated()
 
                         // 그 외 모두 인증 필요
                         .anyRequest().authenticated()

@@ -299,6 +299,49 @@ Content-Type: application/json
 
 ---
 
+## 내 정보 조회
+Method : GET
+URL    : {{BASE_URL}}/api/users/me
+
+**기대 응답 (200)**
+```json
+{
+  "success": true,
+  "message": "성공",
+  "data": {
+    "id": 1,
+    "email": "user@example.com",
+    "name": "홍길동",
+    "role": "USER"
+  }
+}
+```
+
+**에러 응답**
+
+토큰 없음 → 401
+```json
+{
+  "code": "C004",
+  "message": "인증이 필요합니다.",
+  "errors": []
+}
+```
+
+DB에 유저 없음 → 404
+```json
+{
+  "code": "U001",
+  "message": "사용자를 찾을 수 없습니다.",
+  "errors": []
+}
+```
+
+**FE 활용 방법**
+role === "ADMIN" → 관리자 페이지 접근 허용
+role === "USER"  → 관리자 페이지 접근 차단
+401              → 로그인 페이지 리다이렉트
+
 ## 9. 이후 cart/order 테스트
 
 장바구니와 주문 API는 로그인 후 발급받은 `{{TOKEN}}`을 그대로 사용하면 됩니다.
