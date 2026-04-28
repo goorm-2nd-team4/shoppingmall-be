@@ -11,6 +11,7 @@ public class CartItemResponse {
 
     private Long cartItemId;
     private Long productId;
+    private String productName; // 추가
     private int productCount;
     private int productPrice;
     private int subtotal;  // productPrice * productCount
@@ -20,6 +21,7 @@ public class CartItemResponse {
         return CartItemResponse.builder()
                 .cartItemId(item.getId())
                 .productId(item.getProductId())
+                .productName(product.getProductName()) // 추가
                 .productCount(item.getProductCount())
                 .productPrice(currentPrice)
                 .subtotal(item.calculateSubtotal(currentPrice))
