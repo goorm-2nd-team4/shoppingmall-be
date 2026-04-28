@@ -1,0 +1,77 @@
+// shoppingmall-be DB schema based on current JPA entities
+// Docs: https://dbml.dbdiagram.io/docs
+
+Enum user_role {
+  USER
+  ADMIN
+}
+
+Enum order_status {
+  PENDING
+  PAID
+  SHIPPING
+  DELIVERED
+  CANCELLED
+}
+
+Table users {
+  id bigint [pk, increment]
+  user_email varchar(100) [not null, unique]
+  user_password varchar(255) [not null]
+  user_name varchar(50) [not null]
+  user_role user_role [not null]
+}
+
+Table products {
+  id bigint [pk, increment]
+  product_name varchar(100) [not null]
+  product_price integer [not null]
+  product_category varchar(50) [not null]
+  product_detail text [not null]
+  stock integer [not null]
+}
+
+Table carts {
+  id bigint [pk, increment]
+  user_email varchar(100) [not null, unique, note: 'users.user_email logical reference']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table cart_items {
+  id bigint [pk, increment]
+  cart_id bigint [not null]
+  product_id bigint [not null, note: 'products.id logical reference, current price is read from products']
+  product_count integer [not null]
+}
+
+Table orders {
+  id bigint [pk, increment]
+  order_number varchar(50) [not null, unique]
+  user_email varchar(100) [not null, note: 'users.user_email logical reference']
+  total_price integer [not null]
+  total_count integer [not null]
+  order_status order_status [not null]
+  order_date timestamp
+  updated_at timestamp
+}
+
+Table order_items {
+  id bigint [pk, increment]
+  order_id bigint [not null]
+  product_id bigint [not null, note: 'products.id logical reference, kept with snapshot data']
+  product_name varchar(100) [not null, note: 'product name snapshot at order time']
+  product_count integer [not null]
+  product_price integer [not null, note: 'product price snapshot at order time']
+  total_price integer [not null]
+}
+
+// Physical FK-like relations present in the current entity model
+Ref: cart_items.cart_id > carts.id
+Ref: order_items.order_id > orders.id
+
+// Logical relations used by the application layer
+Ref: carts.user_email > users.user_email
+Ref: orders.user_email > users.user_email
+Ref: cart_items.product_id > products.id
+Ref: order_items.product_id > products.id

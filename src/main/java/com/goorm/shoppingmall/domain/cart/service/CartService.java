@@ -5,8 +5,12 @@ import com.goorm.shoppingmall.domain.cart.entity.Cart;
 import com.goorm.shoppingmall.domain.cart.entity.CartItem;
 import com.goorm.shoppingmall.domain.cart.repository.CartItemRepository;
 import com.goorm.shoppingmall.domain.cart.repository.CartRepository;
+import com.goorm.shoppingmall.domain.product.entity.Product;
+import com.goorm.shoppingmall.domain.product.repository.ProductRepository;
 import com.goorm.shoppingmall.global.exception.CustomException;
 import com.goorm.shoppingmall.global.exception.ErrorCode;
+import java.util.Map;
+import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,13 +23,14 @@ public class CartService {
 
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
+    private final ProductRepository productRepository;
 
     @Transactional
     public CartResponse getCart(String userEmail) {
         Cart cart = getOrCreateCart(userEmail);
         log.debug("[CartService] 장바구니 조회 - userEmail: {}, itemCount: {}",
                 userEmail, cart.getCartItems().size());
-        return CartResponse.from(cart);
+        return buildCartResponse(cart);
     }
 
     @Transactional
@@ -42,9 +47,10 @@ public class CartService {
         CartItem item = CartItem.create(
                 cart,
                 request.getProductId(),
-                request.getProductCount(),
-                request.getProductPrice()
+                request.getProductCount()
         );
+
+        ensureProductExists(request.getProductId());
 
         cartItemRepository.save(item);
         cart.addItem(item);
@@ -52,7 +58,7 @@ public class CartService {
         log.debug("[CartService] 장바구니 추가 - userEmail: {}, productId: {}",
                 userEmail, request.getProductId());
 
-        return CartResponse.from(cart);
+        return buildCartResponse(cart);
     }
 
     @Transactional
@@ -67,7 +73,7 @@ public class CartService {
         log.debug("[CartService] 수량 변경 - cartItemId: {}, count: {}",
                 cartItemId, request.getProductCount());
 
-        return CartResponse.from(cart);
+        return buildCartResponse(cart);
     }
 
     @Transactional
@@ -81,7 +87,7 @@ public class CartService {
 
         log.debug("[CartService] 상품 삭제 - cartItemId: {}", cartItemId);
 
-        return CartResponse.from(cart);
+        return buildCartResponse(cart);
     }
 
     @Transactional
@@ -113,5 +119,30 @@ public class CartService {
         if (!item.getCart().getId().equals(cart.getId())) {
             throw new CustomException(ErrorCode.ACCESS_DENIED);
         }
+    }
+
+    private void ensureProductExists(Long productId) {
+        if (!productRepository.existsById(productId)) {
+            throw new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
+        }
+    }
+
+    private CartResponse buildCartResponse(Cart cart) {
+        Map<Long, Product> productsById = productRepository.findAllById(
+                        cart.getCartItems().stream()
+                                .map(CartItem::getProductId)
+                                .distinct()
+                                .toList()
+                ).stream()
+                .collect(java.util.stream.Collectors.toMap(Product::getId, Function.identity()));
+
+        boolean hasMissingProduct = cart.getCartItems().stream()
+                .anyMatch(item -> !productsById.containsKey(item.getProductId()));
+
+        if (hasMissingProduct) {
+            throw new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
+        }
+
+        return CartResponse.from(cart, productsById);
     }
 }

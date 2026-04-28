@@ -23,16 +23,12 @@ public class CartItem {
     @Column(name = "product_count", nullable = false)
     private int productCount;
 
-    @Column(name = "product_price", nullable = false)
-    private int productPrice;  // 담을 당시 가격 스냅샷
-
     // 생성 팩토리 메서드
-    public static CartItem create(Cart cart, Long productId, int productCount, int productPrice) {
+    public static CartItem create(Cart cart, Long productId, int productCount) {
         CartItem item = new CartItem();
         item.cart = cart;
         item.productId = productId;
         item.productCount = productCount;
-        item.productPrice = productPrice;
         return item;
     }
 
@@ -45,7 +41,7 @@ public class CartItem {
     }
 
     // 소계 계산
-    public int calculateSubtotal() {
-        return this.productPrice * this.productCount;
+    public int calculateSubtotal(int currentProductPrice) {
+        return currentProductPrice * this.productCount;
     }
 }
