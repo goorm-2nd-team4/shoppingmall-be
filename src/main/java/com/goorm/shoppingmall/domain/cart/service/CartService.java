@@ -37,23 +37,24 @@ public class CartService {
     public CartResponse addItem(String userEmail, CartItemAddRequest request) {
         Cart cart = getOrCreateCart(userEmail);
 
-        boolean alreadyExists = cartItemRepository
-                .existsByCartIdAndProductId(cart.getId(), request.getProductId());
-
-        if (alreadyExists) {
-            throw new CustomException(ErrorCode.CART_ITEM_ALREADY_EXISTS);
-        }
-
-        CartItem item = CartItem.create(
-                cart,
-                request.getProductId(),
-                request.getProductCount()
-        );
-
         ensureProductExists(request.getProductId());
 
+        CartItem item = cartItemRepository
+                .findByCartIdAndProductId(cart.getId(), request.getProductId())
+                .orElse(null);
+
+        if (item != null) {
+            item.updateCount(item.getProductCount() + request.getProductCount());
+        } else {
+            item = CartItem.create(
+                    cart,
+                    request.getProductId(),
+                    request.getProductCount()
+            );
+            cart.addItem(item);
+        }
+
         cartItemRepository.save(item);
-        cart.addItem(item);
 
         log.debug("[CartService] 장바구니 추가 - userEmail: {}, productId: {}",
                 userEmail, request.getProductId());
@@ -93,7 +94,11 @@ public class CartService {
     @Transactional
     public void clearCart(String userEmail) {
         Cart cart = getCartByUserEmail(userEmail);
+
+        cartItemRepository.deleteAll(cart.getCartItems());
+
         cart.getCartItems().clear();
+
         log.debug("[CartService] 장바구니 전체 비우기 - userEmail: {}", userEmail);
     }
 

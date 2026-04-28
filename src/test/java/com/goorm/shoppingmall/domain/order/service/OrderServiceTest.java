@@ -39,8 +39,6 @@ class OrderServiceTest {
 
     @Mock
     private OrderNumberGenerator orderNumberGenerator;
-
-    // ★ B안 - 전부 String email 기준
     private final String USER_EMAIL = "test@test.com";
     private final String OTHER_EMAIL = "other@test.com";
     private final Long ORDER_ID = 100L;
