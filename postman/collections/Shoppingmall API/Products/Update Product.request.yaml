@@ -1,0 +1,26 @@
+$kind: http-request
+name: Update Product
+method: PATCH
+url: '{{baseUrl}}/api/products/{{productId}}'
+order: 4000
+pathVariables:
+  - key: productId
+    value: '1'
+headers:
+  - key: Content-Type
+    value: application/json
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{token}}'
+body:
+  type: json
+  content: |-
+    {
+      "product_name": "Updated Product",
+      "product_price": 9000,
+      "product_category": "Electronics",
+      "product_detail": "Updated product detail",
+      "stock": 50
+    }

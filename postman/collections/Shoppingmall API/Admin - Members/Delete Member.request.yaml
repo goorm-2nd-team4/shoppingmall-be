@@ -1,0 +1,13 @@
+$kind: http-request
+name: Delete Member
+method: DELETE
+url: '{{baseUrl}}/api/admin/members/{{memberId}}'
+order: 4000
+pathVariables:
+  - key: memberId
+    value: '1'
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{token}}'

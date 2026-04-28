@@ -1,0 +1,22 @@
+$kind: http-request
+name: Update Cart Item
+method: PUT
+url: '{{baseUrl}}/api/cart/items/{{cartItemId}}'
+order: 3000
+pathVariables:
+  - key: cartItemId
+    value: '1'
+headers:
+  - key: Content-Type
+    value: application/json
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{token}}'
+body:
+  type: json
+  content: |-
+    {
+      "productCount": 3
+    }

@@ -1,0 +1,27 @@
+$kind: http-request
+name: Create Order
+method: POST
+url: '{{baseUrl}}/api/orders'
+order: 1000
+headers:
+  - key: Content-Type
+    value: application/json
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{token}}'
+body:
+  type: json
+  content: |-
+    {
+      "items": [
+        {
+          "productId": 1,
+          "productName": "Sample Product",
+          "productCount": 2,
+          "productPrice": 10000
+        }
+      ],
+      "fromCart": false
+    }
