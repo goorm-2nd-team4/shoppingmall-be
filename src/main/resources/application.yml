@@ -2,22 +2,29 @@ spring:
   application:
     name: shoppingmall
   profiles:
-    active: local
+    active: ${SPRING_PROFILES_ACTIVE:local}
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/shoppingmall}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:abcd1234}
     driver-class-name: org.postgresql.Driver
   jpa:
+    open-in-view: false
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: ${JPA_DDL_AUTO:update}
+    show-sql: ${JPA_SHOW_SQL:true}
     properties:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
   jackson:
     time-zone: Asia/Seoul
+
+app:
+  admin:
+    email: ${ADMIN_EMAIL:admin@shoppingmall.com}
+    password: ${ADMIN_PASSWORD:Admin1234!}
+    name: ${ADMIN_NAME:기본 관리자}
 
 jwt:
   secret: ${JWT_SECRET:test-secret-key-test-secret-key-test-secret-key}
