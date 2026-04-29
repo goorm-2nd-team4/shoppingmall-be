@@ -55,6 +55,7 @@ public class SecurityConfig {
 
                         // ── 인증 없이 허용 ──────────────────────
                         .requestMatchers(
+                                "/healthz",
                                 "/api/auth/login",
                                 "/api/auth/register",
                                 "/swagger-ui.html",
