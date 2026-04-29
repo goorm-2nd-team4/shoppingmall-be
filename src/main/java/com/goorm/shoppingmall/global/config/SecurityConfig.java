@@ -115,7 +115,8 @@ public class SecurityConfig {
 
         config.setAllowedOrigins(List.of(
                 "http://localhost:3000",   // React 개발 서버
-                "http://localhost:5173"    // ← Vite 포트
+                "http://localhost:5173",    // ← Vite 포트
+                "https://shoppingmall-fe.vercel.app"    // 프론트 배포 주소
         ));
         config.setAllowedMethods(List.of(
                 "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"
